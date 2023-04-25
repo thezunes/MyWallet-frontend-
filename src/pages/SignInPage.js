@@ -9,10 +9,10 @@ export default function SignInPage() {
         <MyWalletLogo />
         <input placeholder="E-mail" type="email" />
         <input placeholder="Senha" type="password" autocomplete="new-password" />
-        <button>Entrar</button>
+        <Link to={"/home"}><button>Entrar</button></Link>
       </form>
 
-      <Link>
+      <Link to={"/cadastro"}>
         Primeira vez? Cadastre-se!
       </Link>
     </SingInContainer>
