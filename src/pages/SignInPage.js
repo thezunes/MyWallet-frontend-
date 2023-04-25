@@ -3,15 +3,13 @@ import { Link, useNavigate } from "react-router-dom"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useEffect, useState } from "react"
 import axios from "axios"
+ 
 
-
-export default function SignInPage({apiUrl, setToken}) {
+export default function SignInPage({apiUrl, setToken, token, setTokenStorage}) {
 
   const [form, setForm] = useState({})
   const navigate = useNavigate()
-
-  useEffect(() => console.log(form), [form])
-
+ 
   function handleChange (e) {
     setForm({...form, [e.target.name]: e.target.value})
    }
@@ -22,10 +20,19 @@ export default function SignInPage({apiUrl, setToken}) {
     axios.post(`${apiUrl}/signin`, form)
     .then((res) => {
     navigate("/home")
-    console.log("Login realizado com sucesso")  
     setToken(res.data)
-    })     
-    .catch((err) => console.log(err.response.data))
+    console.log("Login realizado com sucesso")  
+  //   setInterval(() => {
+  //   setToken(res.data)
+  //   console.log(token); 
+  //   setToken(false); 
+  //   console.log(token); 
+  //   localStorage.removeItem("token");  
+  //   setTokenStorage(false)
+  // }
+  //   , 50000)  
+    })
+    .catch((err) => alert(err.response.data))
     
   }
 

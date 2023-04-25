@@ -1,10 +1,25 @@
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import { Navigate, useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
 
-export default function HomePage() {
+export default function HomePage({token, tokenStorage,setTypeOfTransaction,typeOfTransaction}) {
+  const navigate = useNavigate()
+ 
+  function navigateToTransaction(newTypeOfTransaction) {
+    navigate(`/nova-transacao/${newTypeOfTransaction}`)
+  }
+  
+  function transaction(t) {
+    setTypeOfTransaction(t)
+    navigateToTransaction(t);
+  }
+
   return (
-    <HomeContainer>
+    // tokenStorage ? (
+    
+   <HomeContainer>
       <Header>
         <h1>Olá, Fulano</h1>
         <BiExit />
@@ -37,17 +52,16 @@ export default function HomePage() {
 
 
       <ButtonsContainer>
-        <button>
-          <AiOutlinePlusCircle />
-          <p>Nova <br /> entrada</p>
-        </button>
-        <button>
-          <AiOutlineMinusCircle />
-          <p>Nova <br />saída</p>
+      <button onClick={() => {transaction("entrada")}}>
+      <p>Nova <br /> entrada</p>
+      </button>
+      <button onClick={() => {transaction("saida")}}>
+      <p>Nova <br />saída</p>
         </button>
       </ButtonsContainer>
 
     </HomeContainer>
+    // ) : navigate("/")
   )
 }
 
@@ -114,8 +128,8 @@ const ListItemContainer = styled.li`
   margin-bottom: 8px;
   color: #000000;
   margin-right: 10px;
-  div span {
+  div span {  
     color: #c6c6c6;
     margin-right: 10px;
   }
-`
+`   
