@@ -3,16 +3,17 @@ import styled from "styled-components"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useEffect, useState } from "react"
 import axios from "axios"
-
-
  
-export default function SignUpPage() {
+ 
+ 
+export default function SignUpPage({apiUrl}) {
 	
   const [form, setForm] = useState ({name: "",email: "",password: ""})
   const [confirmPaswword, setConfirmPassword] = useState ({password: "", password2: ""})
   const [teste, setTeste] = useState ({password: "dddd", password2: "dddd"})
   const [password, setPassword] = useState()
   const [disabledButton, setdisabledButton] = useState(true)
+ 
 
   const navigate = useNavigate()
 

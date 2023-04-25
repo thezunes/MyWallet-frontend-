@@ -9,9 +9,8 @@ import TransactionsPage from "./pages/TransactionPage"
 export default function App() {
 
 
-  const apiUrl = process.env.API_URL;
-  // dotenv.config()
-
+  const apiUrl = "https://mywallet-api-kp5h.onrender.com";
+ 
 
   return (
     <PagesContainer>
