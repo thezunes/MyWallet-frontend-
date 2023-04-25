@@ -47,7 +47,7 @@ function handleChange(e){
 
   if(password){
 
-  axios.post("http://localhost:5001/signup", form)
+  axios.post(`${apiUrl}/signup`, form)
   .then(() =>  navigate("/"))
   .catch((err) => alert(err.response.data))
 
