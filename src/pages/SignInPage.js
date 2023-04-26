@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
  
 
-export default function SignInPage({apiUrl, setToken, token, setTokenStorage}) {
+export default function SignInPage({apiUrl, setUserName, setToken, token, setTokenStorage}) {
 
   const [form, setForm] = useState({})
   const navigate = useNavigate()
@@ -20,7 +20,8 @@ export default function SignInPage({apiUrl, setToken, token, setTokenStorage}) {
     axios.post(`${apiUrl}/signin`, form)
     .then((res) => {
     navigate("/home")
-    setToken(res.data)
+    setToken(res.data.token)
+    setUserName(res.data.name)
     console.log("Login realizado com sucesso")  
   //   setInterval(() => {
   //   setToken(res.data)

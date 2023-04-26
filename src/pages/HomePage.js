@@ -1,11 +1,24 @@
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
-import { Navigate, useNavigate } from "react-router-dom"
+import { Navigate, useFetcher, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
+import axios from "axios"
 
-export default function HomePage({token, tokenStorage,setTypeOfTransaction,typeOfTransaction}) {
+export default function HomePage({token,userName, apiUrl, tokenStorage,setTypeOfTransaction,typeOfTransaction}) {
   const navigate = useNavigate()
+   const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => renderTransactions(),[])
+  
+  function renderTransactions(){ 
+    axios.get(`${apiUrl}/transactions`, {headers: {
+      token: token
+    }})
+    .then(res => setTransactions(res.data))
+    .catch(err => console.log(err))
+  }
+ 
  
   function navigateToTransaction(newTypeOfTransaction) {
     navigate(`/nova-transacao/${newTypeOfTransaction}`)
@@ -14,6 +27,7 @@ export default function HomePage({token, tokenStorage,setTypeOfTransaction,typeO
   function transaction(t) {
     setTypeOfTransaction(t)
     navigateToTransaction(t);
+    console.log(setTransactions)
   }
 
   return (
@@ -21,33 +35,27 @@ export default function HomePage({token, tokenStorage,setTypeOfTransaction,typeO
     
    <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
+        <h1>{`Olá, ${userName}`}</h1>
         <BiExit />
       </Header>
 
+   
       <TransactionsContainer>
+      {transactions.map((t) => 
         <ul>
-          <ListItemContainer>
+          <ListItemContainer color={t.type}>
             <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
+              <span>{`${t.date}`}</span>
+              <strong>{`${t.name}`}</strong>
             </div>
-            <Value color={"negativo"}>120,00</Value>
+            <Value color={`${t.type}`}>{`${t.value}`}</Value>
           </ListItemContainer>
+          </ul> )}
 
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
-        </ul>
-
-        <article>
-          <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
-        </article>
+        <Total>
+          <Money>Saldo:</Money>
+          <Value color={"positivo"}>R$ 2880,00</Value>
+        </Total>
       </TransactionsContainer>
 
 
@@ -87,7 +95,6 @@ const TransactionsContainer = styled.article`
   padding: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   article {
     display: flex;
     justify-content: space-between;   
@@ -119,13 +126,14 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${(props) => (props.color === "entrada" ? "green" : "red")};
 `
 const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  overflow: scroll;
   color: #000000;
   margin-right: 10px;
   div span {  
@@ -133,3 +141,16 @@ const ListItemContainer = styled.li`
     margin-right: 10px;
   }
 `   
+
+const Total = styled.div`
+  display:flex;
+  justify-content: flex-end;
+  font-size: 16px;
+  text-align: right;
+  color: black;
+  padding-top: 480px;
+`
+
+const Money = styled.div`
+  padding-right: 5px;
+`

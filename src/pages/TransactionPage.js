@@ -2,6 +2,7 @@ import { useState } from "react"
 import styled from "styled-components"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import Inputmask from 'inputmask';
 
 
 export default function TransactionsPage({typeOfTransaction, token, apiUrl}) {
@@ -34,7 +35,7 @@ export default function TransactionsPage({typeOfTransaction, token, apiUrl}) {
 
     axios.post(`${apiUrl}/transaction`, formTransaction, config)
     .then(() =>  {console.log("Transação efetuada com sucesso"); navigate("/home");} )
-    .catch((err) => console.log(err.response.data))
+    .catch((err) => alert(err.response.data))
     }
  
    return (
@@ -47,7 +48,7 @@ export default function TransactionsPage({typeOfTransaction, token, apiUrl}) {
         value={formTransaction.value}
         onChange={handleChange}
         placeholder="Valor"
-        type="text"/>
+        type="number"/>
 
         <input 
         name={"name"} 
