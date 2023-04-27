@@ -5,10 +5,13 @@ import { useEffect, useState } from "react"
 import axios from "axios"
  
 
-export default function SignInPage({apiUrl, setUserName, setToken, token, setTokenStorage}) {
+export default function SignInPage({apiUrl, userName,  setUserName, setToken, token, setTokenStorage}) {
 
   const [form, setForm] = useState({})
   const navigate = useNavigate()
+
+  useEffect(() => token && userName ? navigate("/home") : navigate("/"), [])
+
  
   function handleChange (e) {
     setForm({...form, [e.target.name]: e.target.value})
@@ -19,22 +22,28 @@ export default function SignInPage({apiUrl, setUserName, setToken, token, setTok
     event.preventDefault();
     axios.post(`${apiUrl}/signin`, form)
     .then((res) => {
-    navigate("/home")
-    setToken(res.data.token)
-    setUserName(res.data.name)
-    console.log("Login realizado com sucesso")  
-  //   setInterval(() => {
-  //   setToken(res.data)
-  //   console.log(token); 
-  //   setToken(false); 
-  //   console.log(token); 
-  //   localStorage.removeItem("token");  
-  //   setTokenStorage(false)
-  // }
-  //   , 50000)  
+      navigate("/home");
+      setToken(res.data.token);
+      setUserName(res.data.name);
+      console.log("Login realizado com sucesso");  
+      localStorage.removeItem("token");  
+      localStorage.removeItem("userName");
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userName", res.data.userName);
+  
+      if (token) {
+        setInterval(() => {
+          localStorage.removeItem("token");  
+          localStorage.removeItem("userName");  
+          localStorage.clear()
+          setToken(undefined);
+          setUserName(undefined);
+          navigate("/");
+          alert("Sessão Expirada, faça login novamente");
+        }, 600000);
+      }
     })
-    .catch((err) => alert(err.response.data))
-    
+    .catch((err) => alert(err.response.data)); 
   }
 
   return (

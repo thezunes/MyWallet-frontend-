@@ -12,10 +12,10 @@ import { useEffect, useState } from "react"
 
 export default function App() {
  
-  const [token, setToken] = useState()
+  const [token, setToken] = useState(localStorage.getItem("token"))
   const [tokenStorage, setTokenStorage] = useState(localStorage.getItem("token")) 
   const [typeOfTransaction, setTypeOfTransaction] = useState(undefined) 
-  const [userName, setUserName] = useState("")
+  const [userName, setUserName] = useState(localStorage.getItem("userName"))
 
   // const apiUrl = "https://mywallet-api-kp5h.onrender.com"; // prod
   const apiUrl = "http://localhost:5000" // dev 
@@ -26,10 +26,10 @@ export default function App() {
     <PagesContainer>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SignInPage setUserName={setUserName} apiUrl={apiUrl} setToken={setToken} token={token} setTokenStorage={setTokenStorage} />} />
+          <Route path="/" element={<SignInPage setUserName={setUserName} userName={userName} apiUrl={apiUrl} setToken={setToken} token={token} setTokenStorage={setTokenStorage} />} />
           <Route path="/cadastro" element={<SignUpPage apiUrl={apiUrl} token={token} />} />
-          <Route path="/home" element={<HomePage userName={userName} apiUrl={apiUrl} token={token} tokenStorage={tokenStorage} setTypeOfTransaction={setTypeOfTransaction} typeOfTransaction={typeOfTransaction}/>} />
-          <Route path="/nova-transacao/:tipo" element={<TransactionsPage apiUrl={apiUrl} token={token} typeOfTransaction={typeOfTransaction}/>} />
+          <Route path="/home" element={<HomePage userName={userName} setToken={setToken} setUserName={setUserName} apiUrl={apiUrl} token={token} tokenStorage={tokenStorage} setTypeOfTransaction={setTypeOfTransaction} typeOfTransaction={typeOfTransaction}/>} />
+          <Route path="/nova-transacao/:tipo" element={<TransactionsPage userName={userName} apiUrl={apiUrl} token={token} typeOfTransaction={typeOfTransaction}/>} />
         </Routes>
       </BrowserRouter>
     </PagesContainer>

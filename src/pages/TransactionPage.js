@@ -1,11 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import Inputmask from 'inputmask';
 
 
-export default function TransactionsPage({typeOfTransaction, token, apiUrl}) {
+export default function TransactionsPage({typeOfTransaction, token, apiUrl, userName}) {
 
   const path=window.location.pathname;
   const parts = path.split('/');  
@@ -13,8 +12,15 @@ export default function TransactionsPage({typeOfTransaction, token, apiUrl}) {
   const navigate = useNavigate()
 
   const [formTransaction, setFormTransaction] = useState({type:`${tipo}`})
-  
 
+  useEffect(() => {
+    if (!token && !userName) {
+      navigate("/");
+    } else {
+      
+    }
+
+  }, []);
    function handleChange (e) {
     setFormTransaction({...formTransaction, [e.target.name]: e.target.value})
    }

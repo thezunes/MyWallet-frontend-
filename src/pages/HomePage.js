@@ -5,26 +5,50 @@ import { Navigate, useFetcher, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import axios from "axios"
 
-export default function HomePage({token,userName, apiUrl, tokenStorage,setTypeOfTransaction,typeOfTransaction}) {
+export default function HomePage({token,userName, apiUrl, tokenStorage,setTypeOfTransaction,typeOfTransaction, setToken, setUserName}) {
   const navigate = useNavigate()
   const [transactions, setTransactions] = useState([]);
+  const [nameHello,setNameHello] = useState(localStorage.getItem("userName"))
 
   useEffect(() => renderTransactions(),[])
+  useEffect(() => token && userName ? navigate("/home") : navigate("/"), [])
   
   function renderTransactions(){ 
+
+    setNameHello(userName)
+
     axios.get(`${apiUrl}/transactions`, {headers: {
       token: token
     }})
     .then(res => setTransactions(res.data))
     .catch(err => console.log(err))
   }
+
+  function logout() {
+
+    const config = { 
+      headers: { Authorization: `Bearer ${token}` } 
+    }
+
+    axios.post(`${apiUrl}/logout`, token, config)
+    .then(() => {   
+        localStorage.removeItem("token");  
+        localStorage.removeItem("userName");  
+        localStorage.clear()
+        setToken(undefined);
+        setUserName(undefined);
+        navigate("/");
+    })
+    .catch((err) => console.log(err.response.data))
+}
+
+  console.log(userName)
  
   function totalBalance() {
 
     const total = transactions.reduce((acc, cur) => cur.type === "entrada" ? acc + cur.value : acc - cur.value, 0)
-    console.log(total)
 
-    return total.toFixed(2).toString().replace("." , ",")
+    return total.toFixed(2) 
   
   }
   const balance = transactions && totalBalance()
@@ -44,8 +68,8 @@ export default function HomePage({token,userName, apiUrl, tokenStorage,setTypeOf
     
    <HomeContainer>
       <Header>
-        <h1>{`Olá, ${userName}`}</h1>
-        <BiExit />
+        <h1>{`Olá, ${nameHello}`}</h1>
+        <BiExit onClick={logout}/>
       </Header>
 
    
