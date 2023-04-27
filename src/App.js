@@ -17,8 +17,8 @@ export default function App() {
   const [typeOfTransaction, setTypeOfTransaction] = useState(undefined) 
   const [userName, setUserName] = useState(localStorage.getItem("userName"))
 
-  // const apiUrl = "https://mywallet-api-kp5h.onrender.com"; // prod
-  const apiUrl = "http://localhost:5000" // dev 
+  const apiUrl = "https://mywallet-api-kp5h.onrender.com"; // prod
+  // const apiUrl = "http://localhost:5000" // dev 
 
   useEffect(() => localStorage.setItem("token", `${token}`),[token])
  
