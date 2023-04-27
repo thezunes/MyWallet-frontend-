@@ -7,7 +7,7 @@ import axios from "axios"
 
 export default function HomePage({token,userName, apiUrl, tokenStorage,setTypeOfTransaction,typeOfTransaction}) {
   const navigate = useNavigate()
-   const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => renderTransactions(),[])
   
@@ -19,7 +19,16 @@ export default function HomePage({token,userName, apiUrl, tokenStorage,setTypeOf
     .catch(err => console.log(err))
   }
  
- 
+  function totalBalance() {
+
+    const total = transactions.reduce((acc, cur) => cur.type === "entrada" ? acc + cur.value : acc - cur.value, 0)
+    console.log(total)
+
+    return total.toFixed(2).toString().replace("." , ",")
+  
+  }
+  const balance = transactions && totalBalance()
+  
   function navigateToTransaction(newTypeOfTransaction) {
     navigate(`/nova-transacao/${newTypeOfTransaction}`)
   }
@@ -41,21 +50,26 @@ export default function HomePage({token,userName, apiUrl, tokenStorage,setTypeOf
 
    
       <TransactionsContainer>
-      {transactions.map((t) => 
-        <ul>
+      {transactions.length === 0 ? (
+      <p>Não há registros de entrada nem saída</p>
+        ) : (
+          <ul>
+        {transactions.map((t) => (
           <ListItemContainer color={t.type}>
             <div>
               <span>{`${t.date}`}</span>
               <strong>{`${t.name}`}</strong>
             </div>
-            <Value color={`${t.type}`}>{`${t.value}`}</Value>
+            <Value color={`${t.type}`}>{`R$${t.value}`}</Value>
           </ListItemContainer>
-          </ul> )}
-
+        ))}
+      </ul>
+    )}
+            
         <Total>
           <Money>Saldo:</Money>
-          <Value color={"positivo"}>R$ 2880,00</Value>
-        </Total>
+          <Value color={balance > 0 ? "entrada" : "saida"}>{balance.toString().replace(".", ",")}</Value> 
+       </Total>
       </TransactionsContainer>
 
 
